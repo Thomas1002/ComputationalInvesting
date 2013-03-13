@@ -22,52 +22,40 @@ def simulate(startdate, enddate, symbols, allocation):
   d_data = dict(zip(ls_keys, ldf_data))
   
   na_price = d_data['close'].values
-  print na_price
+  #print na_price
   '''plot(na_price, 'Adjusted close', ldt_timestamps, ls_symbols)'''
-  print 'normalized prices'
+  #print 'normalized prices'
   normalized_price = na_price / na_price[0, :]
-  print 'cumulative'
+  #print 'cumulative'
   c = normalized_price * allocation
-  print c
-  np.set_printoptions(precision=7)
-  print 'sum'
+  #print c
+  #print ' Fund Invest $'
   invest = c.sum(axis=1)
-  print invest
-  np.set_printoptions(precision=3)
-  copy = invest.copy()
-  print 'copy' 
-  print copy
-  dr = tsu.returnize0(copy)
-  print 'dr'
-  print dr
-  
-  print 'fc'
-  fc = invest / invest[0] * 100.0
-  print fc
-  np.set_printoptions(precision=3)
-  daily_returns = np.array([1.000] + [100.0 * ((invest[i] / invest[i-1]) - 1) for i in range(1, len(invest))])
-  print daily_returns
-  print len(daily_returns)
-  
-  drsum = daily_returns.sum() / len(daily_returns)
-  print 'drsum %f %f %f' % (daily_returns.sum(), len(daily_returns), drsum)
-  print daily_returns.std()
-  
-  print invest.sum() / len(invest)
-  ''''b = normalized_price.transpose() * [0.6, 0.4]
-  print b
-  print 100.0 * normalized_price'''
-  '''print 'norm %'
-  b = normalized_price * 100.0
-  print b'''
-  
+  #print invest
+
+  daily_returns = tsu.daily(invest) 
+  #print 'Daily returns %'
+  #print daily_returns * 100.0
+  mean_daily_return = np.mean(daily_returns) 
+  stdev_daily_return = np.std(daily_returns)
+  #sharpe_ratio = mean_daily_return / stdev_daily_return * np.sqrt(252)
+  sharpe_ratio = tsu.get_sharpe_ratio(daily_returns)
+  return stdev_daily_return, mean_daily_return, sharpe_ratio, invest[-1]
+ 
   
 if __name__ == '__main__':
   np.set_printoptions(precision=2)
   symbols = ["AAPL", "GLD", "GOOG", "$SPX", "XOM"]
   symbols = ["AAPL", "GOOG", "XOM", "GLD"]
+  #symbols = ["AAPL", "GLD"]
   startdate = dt.datetime(2011, 1, 1)
   enddate = dt.datetime(2011, 12, 31)
   allocation = [0.4, 0.0, 0.2, 0.4]
+  #allocation = [0.6, 0.4]
   
-  simulate(startdate, enddate, symbols, allocation)
+  result = simulate(startdate, enddate, symbols, allocation)
+  print 'Sharpe ratio: %.11f' % (result[2])
+  print 'Volatility %.13f' % (result[0])
+  print 'Average Daily Return %.15f' % (result[1])
+  print 'Cumulatative return %.11f' % (result[-1])
+  
