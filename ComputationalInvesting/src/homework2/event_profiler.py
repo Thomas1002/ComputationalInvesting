@@ -45,9 +45,9 @@ nan = no information about any event.
 """
 
 
-def find_events(ls_symbols, d_data):
+def find_events(ls_symbols, d_data, key, limit):
     ''' Finding the event dataframe '''
-    df_close = d_data['actual_close']
+    df_close = d_data[key]
     ts_market = df_close['SPY']
 
     print "Finding Events"
@@ -69,11 +69,9 @@ def find_events(ls_symbols, d_data):
             f_symreturn_today = (f_symprice_today / f_symprice_yest) - 1
             f_marketreturn_today = (f_marketprice_today / f_marketprice_yest) - 1
 
-            if f_symprice_today < 8.0 and f_symprice_yest >= 8.0:
+            if f_symprice_today < limit and f_symprice_yest >= limit:
               df_events[s_sym].ix[ldt_timestamps[i]] = 1
             
-            #if f_marketprice_today < 5.0 and f_marketprice_yest >= 5.0:
-             # df_events[s_sym].ix[ldt_timestamps[i]] = 1
             
             # Event is found if the symbol is down more then 3% while the
             # market is up more then 2%
@@ -81,7 +79,30 @@ def find_events(ls_symbols, d_data):
              #   df_events[s_sym].ix[ldt_timestamps[i]] = 1
 
     return df_events
+  
+def study(dt_start, dt_end, list, key, filename, limit):
+    ldt_timestamps = du.getNYSEdays(dt_start, dt_end, dt.timedelta(hours=16))
+    dataobj = da.DataAccess('Yahoo')
+    ls_symbols = dataobj.get_symbols_from_list(list)
+    ls_symbols.append('SPY')
+    ls_keys = ['open', 'high', 'low', 'close', 'volume', 'actual_close']
+    
+    ldf_data = dataobj.get_data(ldt_timestamps, ls_symbols, ls_keys)
+    d_data = dict(zip(ls_keys, ldf_data))
 
+    for s_key in ls_keys:
+      d_data[s_key] = d_data[s_key].fillna(method = 'ffill')
+      d_data[s_key] = d_data[s_key].fillna(method = 'bfill')
+      d_data[s_key] = d_data[s_key].fillna(1.0)
+
+    df_events = find_events(ls_symbols, d_data, key, limit)
+    print "Creating Study"
+    ep.eventprofiler(df_events, d_data, i_lookback=20, i_lookforward=20,
+                s_filename=filename, b_market_neutral=True, b_errorbars=True,
+                s_market_sym='SPY')    
+    i_no_events = int(np.nansum(df_events.values))
+    print 'Test %f' % (i_no_events)
+    return i_no_events
 
 if __name__ == '__main__':
     dt_start = dt.datetime(2008, 1, 1)
