@@ -35,8 +35,8 @@ if __name__ == '__main__':
   minResult = maxResult  
   matrix = np.array(map(list, filter(lambda x: sum(x) == 1, itertools.product(np.linspace(0,1,11), repeat=4))))
   count = len(matrix)
-  matrix = np.array([[0.2, 0.2, 0.2, 0.4], [0.5, 0.0, 0.5, 0.0], [0.1, 0.1, 0.8, 0.0], [0.2, 0.0, 0.8, 0.0]])
-  matrix = matrix2()
+  #matrix = np.array([[0.2, 0.2, 0.2, 0.4], [0.5, 0.0, 0.5, 0.0], [0.1, 0.1, 0.8, 0.0], [0.2, 0.0, 0.8, 0.0]])
+  #matrix = matrix2()
   print '%d = %d' % (count, len(matrix))
   
   for i in range(0, len(matrix)):
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     if (minResult[2] > local[2]):
       minResult = local
       minAllocatioon = matrix[i]
-  print "The Winner is. %s (%s = %.11f) (%d)" % (allocation, minAllocatioon, minResult[2], len(matrix))
+  print "The Winner is. %s (Min: %s = %.11f) (%d)" % (allocation, minAllocatioon, minResult[2], len(matrix))
   print 'Sharpe ratio: %.11f' % (maxResult[2])
   print 'Volatility %.13f' % (maxResult[0])
   print 'Average Daily Return %.15f' % (maxResult[1])

@@ -22,23 +22,13 @@ def simulate(startdate, enddate, symbols, allocation):
   d_data = dict(zip(ls_keys, ldf_data))
   
   na_price = d_data['close'].values
-  #print na_price
-  '''plot(na_price, 'Adjusted close', ldt_timestamps, ls_symbols)'''
-  #print 'normalized prices'
   normalized_price = na_price / na_price[0, :]
-  #print 'cumulative'
   c = normalized_price * allocation
-  #print c
-  #print ' Fund Invest $'
   invest = c.sum(axis=1)
-  #print invest
 
   daily_returns = tsu.daily(invest) 
-  #print 'Daily returns %'
-  #print daily_returns * 100.0
   mean_daily_return = np.mean(daily_returns) 
   stdev_daily_return = np.std(daily_returns)
-  #sharpe_ratio = mean_daily_return / stdev_daily_return * np.sqrt(252)
   sharpe_ratio = tsu.get_sharpe_ratio(daily_returns)
   return stdev_daily_return, mean_daily_return, sharpe_ratio, invest[-1]
  
