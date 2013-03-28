@@ -14,4 +14,11 @@
 	<natures>
 		<nature>org.python.pydev.pythonNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>src/homework3/orders.csv</name>
+			<type>1</type>
+			<location>/home/thomas/git/computationalInvesting/ComputationalInvesting/src/homework3/orders.csv</location>
+		</link>
+	</linkedResources>
 </projectDescription>

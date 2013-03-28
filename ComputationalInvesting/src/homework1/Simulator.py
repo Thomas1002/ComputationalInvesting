@@ -20,7 +20,7 @@ def simulate(startdate, enddate, symbols, allocation):
   ls_keys = ['close']
   ldf_data = c_dataobj.get_data(timestamps, symbols, ls_keys)
   d_data = dict(zip(ls_keys, ldf_data))
-  
+  print d_data.values
   na_price = d_data['close'].values
   normalized_price = na_price / na_price[0, :]
   c = normalized_price * allocation
