@@ -12,23 +12,25 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-def simulate(startdate, enddate, symbols, allocation):
+def simulate(startdate, enddate, symbols, allocation, type):
   timeofday = dt.timedelta(hours=16)
   timestamps = du.getNYSEdays(startdate, enddate, timeofday)
   c_dataobj = da.DataAccess('Yahoo')
-  ls_keys = ['close']
+  ls_keys = [type]
   ldf_data = c_dataobj.get_data(timestamps, symbols, ls_keys)
   d_data = dict(zip(ls_keys, ldf_data))
-  print d_data.values
-  na_price = d_data['close'].values
-  print 'na_price', na_price
+  #print d_data.values
+  na_price = d_data[type].values
+  print 'price', na_price[0], na_price[-1]
+  #print 'na', na_price
+  #print 'na_price', na_price
   normalized_price = na_price / na_price[0, :]
-  print 'norm', normalized_price
+  #print 'norm', normalized_price
   c = normalized_price * allocation
-  print 'n*a', allocation, c
+  #print 'n*a', allocation, c
   invest = c.sum(axis=1)
-  print 'c', c
-  print 'invesi', invest
+  #print 'c', c
+  #print 'invesi', invest
 
 
   daily_returns = tsu.daily(invest) 
