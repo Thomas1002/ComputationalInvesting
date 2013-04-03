@@ -31,7 +31,7 @@ def run(values, symbol):
   print 'result', result[2], result[3], result[0], result[1]
     
 if __name__ == '__main__':
-  run('arto.csv', '$SPX')
+  run('myvalues.csv', '$SPX')
   #run('values2.csv', '$SPX')
   #run('values.csv', '$SPX')
       

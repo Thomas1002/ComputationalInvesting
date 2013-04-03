@@ -15,6 +15,7 @@ def run(cash, orders, values, key):
   data = pd.read_csv(orders, parse_dates=True, names=['year','month','day','symbol','transaction','nr_shares','empty'], header=0)
   data = data.sort(['year', 'month', 'day']);
   old = data
+  print "Data", data
   #print 'Gyldig', data[(data.day == 10) & (data.month == 6) ]
   #print 'Ugyldug', data[(data.day == 31) & (data.month == 6) ]
   
@@ -137,4 +138,4 @@ def run(cash, orders, values, key):
 if __name__ == '__main__':
   #run(1000000, 'orders_q1.csv', 'values_q.csv', 'close')
   #run(1000000, 'orders2_q.csv', 'values2_q.csv', 'close')
-  run(1000000, 'spx.csv', 'valuesspx2.csv', 'close')
+  run(1000000, 'myorders.csv', 'myoutput.csv', 'close')
