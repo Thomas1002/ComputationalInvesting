@@ -94,7 +94,7 @@ def run(cash, orders, values, key):
     value[i][1] = cash_array[i]
     value[i][2] = rowprice + cash_array[i]
   
-  print 'value', value[:,2]  
+  #print 'value', value[:,2]  
   
   #print 'stocks', stocks[5:], len(stocks)
   #print 'Data', data[:5]
@@ -110,10 +110,11 @@ def run(cash, orders, values, key):
   #print 'n*a', allocation, c
   #print "c", c[:10]
   #print 'normal', normalized_price[:20]
+  #invest = c.sum(axis=1)
   invest = c.sum(axis=1)
   
-  #print 'c', c[-5:]
-  #print 'invest', invest[:20]
+  print 'c', c#[-5:]
+  print 'invest', invest[:20]
 
   #daily_returns = tsu.returnize0(invest)
   daily_returns = tsu.daily(invest) 
@@ -135,6 +136,6 @@ def run(cash, orders, values, key):
   #print mean
   
 if __name__ == '__main__':
-  #run(1000000, 'orders_q1.csv', 'values_q.csv', 'close')
+  run(1000000, 'orders_q1.csv', 'values_q.csv', 'close')
   #run(1000000, 'orders2_q.csv', 'values2_q.csv', 'close')
-  run(1000000, 'spx.csv', 'valuesspx2.csv', 'close')
+  #run(1000000, 'spx.csv', 'valuesspx2.csv', 'close')

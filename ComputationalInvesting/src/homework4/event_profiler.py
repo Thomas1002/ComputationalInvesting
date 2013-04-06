@@ -17,7 +17,7 @@ Created on January, 23, 2013
 @summary: Event Profiler Tutorial
 '''
 
-
+import csv
 import pandas as pd
 import numpy as np
 import math
@@ -45,7 +45,7 @@ nan = no information about any event.
 """
 
 
-def find_events(ls_symbols, d_data, key, limit, days):
+def find_events(ls_symbols, d_data, key, limit, days, output):
     ''' Finding the event dataframe '''
     df_close = d_data[key]
     ts_market = df_close['SPY']
@@ -58,7 +58,8 @@ def find_events(ls_symbols, d_data, key, limit, days):
 
     # Time stamps for the event range
     ldt_timestamps = df_close.index
-
+    resultFile = open(output,'wb')
+    wr = csv.writer(resultFile, dialect='excel')
     for s_sym in ls_symbols:
         for i in range(1, len(ldt_timestamps)):
             # Calculating the returns for this timestamp
@@ -71,7 +72,17 @@ def find_events(ls_symbols, d_data, key, limit, days):
 
             if f_symprice_today < limit and f_symprice_yest >= limit:
               df_events[s_sym].ix[ldt_timestamps[i]] = 1
-            
+              
+              date = ldt_timestamps[i]
+              row = [date.year, date.month, date.day, s_sym,'Buy',100,'']
+              wr.writerow(row)
+
+              sellDate = du.getNYSEoffset(date, 5)
+              if (sellDate > ldt_timestamps[-1]):
+                sellDate = ldt_timestamps[-1]
+              row = [sellDate.year, sellDate.month, sellDate.day, s_sym,'Sell',100,'']
+              wr.writerow(row)
+                       
             
             # Event is found if the symbol is down more then 3% while the
             # market is up more then 2%
@@ -80,7 +91,7 @@ def find_events(ls_symbols, d_data, key, limit, days):
 
     return df_events
   
-def study(dt_start, dt_end, list, key, filename, limit, days):
+def study(dt_start, dt_end, list, key, filename, limit, days, output):
     ldt_timestamps = du.getNYSEdays(dt_start, dt_end, dt.timedelta(hours=16))
     dataobj = da.DataAccess('Yahoo')
     ls_symbols = dataobj.get_symbols_from_list(list)
@@ -95,7 +106,7 @@ def study(dt_start, dt_end, list, key, filename, limit, days):
       d_data[s_key] = d_data[s_key].fillna(method = 'bfill')
       d_data[s_key] = d_data[s_key].fillna(1.0)
 
-    df_events = find_events(ls_symbols, d_data, key, limit, days)
+    df_events = find_events(ls_symbols, d_data, key, limit, days, output)
     print "Creating Study"
     ep.eventprofiler(df_events, d_data, i_lookback=20, i_lookforward=20,
                 s_filename=filename, b_market_neutral=True, b_errorbars=True,

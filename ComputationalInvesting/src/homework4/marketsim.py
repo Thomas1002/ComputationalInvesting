@@ -138,4 +138,4 @@ def run(cash, orders, values, key):
 if __name__ == '__main__':
   #run(1000000, 'orders_q1.csv', 'values_q.csv', 'close')
   #run(1000000, 'orders2_q.csv', 'values2_q.csv', 'close')
-  run(1000000, 'myorders.csv', 'myoutput.csv', 'close')
+  run(50000, 'myorders.csv', 'myoutput.csv', 'close')

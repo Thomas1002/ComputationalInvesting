@@ -6,6 +6,8 @@ Created on 22 Mar 2013
 import unittest
 import event_profiler as ep
 import datetime as dt
+import marketsim as ms
+import analyse as an
 
 class Test(unittest.TestCase):
 
@@ -20,9 +22,26 @@ class Test(unittest.TestCase):
 
 
   def test2012(self):
-    count = ep.study(self.dt_start, self.dt_end, 'sp5002012', 'actual_close', 'EventStudy2012', 5.0, 5)
-    self.assertEqual(176.0, count, 'msg')
+    orders = 'orders1.csv'
+    valueFileName = 'values1.csv'
+    count = ep.study(self.dt_start, self.dt_end, 'sp5002012', 'actual_close', 'EventStudy2012', 5.0, 5, orders)
+    ms.run(50000, orders, valueFileName, 'close')
+    an.run(valueFileName, '$SPX')
+    #self.assertEqual(176.0, count, 'msg')
 
+  def testQuiz1(self):
+    orders = 'orders_quiz1.csv'
+    valueFileName = 'values_quiz1.csv'
+    count = ep.study(self.dt_start, self.dt_end, 'sp5002012', 'actual_close', 'EventStudy2012', 7.0, 5, orders)
+    ms.run(50000, orders, valueFileName, 'close')
+    an.run(valueFileName, '$SPX')
+    
+  def testQuiz2(self):
+    orders = 'orders_quiz2.csv'
+    valueFileName = 'values_quiz2.csv'
+    count = ep.study(self.dt_start, self.dt_end, 'sp5002012', 'actual_close', 'EventStudy2012', 6.0, 5, orders)
+    ms.run(50000, orders, valueFileName, 'close')
+    an.run(valueFileName, '$SPX')
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.test2012']
