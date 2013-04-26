@@ -61,7 +61,7 @@ def run(startDate, endDate, loopback, symbols, key, times):
   #plt.legend(('Price', 'Mean', 'Upper', "Lower"), 'upper center', shadow=True)
   plt.show()
   
-  print prices.values[-5:]
+  #print prices.values[-5:]
   
 if __name__ == '__main__':
   start = dt.datetime(2010, 1, 1)
